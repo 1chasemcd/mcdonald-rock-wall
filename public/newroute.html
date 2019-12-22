@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>New Route</title>
+
+    <link rel="stylesheet" href="main/styles.css">
+
+    <link rel="apple-touch-icon" href="main/icon.png"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+  </head>
+  <body>
+    <!--  Menu Bar  -->
+    <div class="topnav" id="topnav">
+      <img src="main/mcd.png" height="90" class="mcdImg"></img>
+      <h1>Wall</h1>
+      <img src="main/back.png" height="110" class="buttonImg" onclick="openIndex()"></img>
+    </div>
+
+    <!--  Page Content  -->
+    <div class="scrollwrapper">
+      <canvas class="viewcanvas" id="viewcanvas"></canvas>
+      <div class="inroute" id="inroute">
+        <h5 id="warningLabel"></h5>
+        <form autocomplete="off" id="routeform" novalidate>
+          <input autocomplete="false" name="hidden" type="text" style="display:none;">
+          <br>
+          <br>
+          <input type="text" name="name" placeholder="Route Name" maxlength="25">
+          <br>
+          <br>
+          <input type="text" name="setter" placeholder="Setter" maxlength="25">
+          <br>
+          <br>
+          <input type="text" name="angle" placeholder="Angle" pattern="[0-9]*" inputmode="numeric" maxlength="2">
+          <br>
+          <br>
+          <input type="text" name="grade" placeholder="Grade" onfocus="focused = true;" onblur="focused = false;" pattern="[0-9]*" inputmode="numeric" maxlength="3">
+          <div class="unsentBox">
+            <input type="checkbox" name="unsent">
+            <h6>Check if Unsent</h6>
+          </div>
+          <br>
+          <br>
+          <input type="submit" name="submit">
+          <br>
+          <br>
+        </form>
+      </div>
+      <div class="bottom" id="bottom"></div>
+    </div>
+
+    <!-- Hidden Image -->
+    <img src="main/wall.png" width="0" height="0" id="img">
+
+    <!-- Firebase scripts -->
+    <script src="/__/firebase/6.3.4/firebase-app.js"></script>
+    <script src="/__/firebase/6.3.4/firebase-firestore.js"></script>
+    <script src="/__/firebase/init.js"></script>
+
+    <script src="scripts/wallclass.js"></script>
+    <script src="scripts/newroute.js"></script>
+  </body>
+</html>

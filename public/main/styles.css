@@ -1,0 +1,165 @@
+/* Body Styles */
+body {
+  margin: 0px;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  background-color: #9bc995;
+
+  position: fixed;
+  overflow: hidden;
+}
+/* Nav Bar Styles */
+.topnav {
+  position: fixed;
+  top:0;
+  width: 100%;
+  background-color: #9bc995;
+  overflow: hidden;
+  z-index: 4;
+}
+
+.topnav h1, h2 {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  margin: 0px;
+  float: left;
+  color: #fff;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 96px;
+}
+
+.topnav img:active{
+  background-color: #8bb985;
+}
+
+.buttonImg {
+  float: right;
+  padding: 15px;
+}
+
+.mcdImg {
+  float: left;
+  padding-top: 25px;
+}
+
+.scrollwrapper
+{
+
+  padding-top: 140px;
+  margin: 0px;
+  width: 100vw;
+  height: calc(100vh - 140px);
+  background-color: #fff;
+  overflow: scroll;
+}
+
+/* Route div Styles */
+.route {
+  background: #5171a5;
+  overflow: auto;
+  border-radius: 24px;
+  margin: 16px;
+}
+
+.route:active {
+  background-color: #416195;
+}
+
+.bottomspace {
+  width: 100vw;
+  height: 1px;
+}
+
+h3, h4 {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  margin: 0px;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  text-decoration: none;
+  font-size: 64px;
+}
+
+h4 {
+  font-size: 48px;
+}
+
+h5 {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  margin: 0px;
+  color: #fff;
+  text-align: center;
+  padding: 0px;
+  text-decoration: none;
+  font-size: 48px;
+}
+
+/* View Route Styles */
+.viewcanvas {
+  display: block;
+  z-index: 1;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  margi
+}
+
+.inroute {
+  background: #5171a5;
+  z-index: 3;
+  margin-top: -3px;
+}
+
+.bottom {
+  margin-top: -3px;
+  width: 100%;
+  background: #5171a5;
+}
+
+/* New route styles */
+input {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  padding: 10px;
+  text-decoration: none;
+  font-size: 64px;
+}
+
+.unsentBox
+{
+  height: 56px;
+}
+
+input[type='checkbox']
+{
+  -webkit-appearance:none;
+  display: inline-block;
+  width:56px;
+  height:56px;
+  border-radius:7px;
+  border:7px solid #fff;
+  margin: 0px;
+  padding: 0px;
+}
+input[type='checkbox']:checked
+{
+  background: #888;
+}
+
+h6 {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  margin: 0px;
+  color: #fff;
+  text-align: center;
+  padding: 0px;
+  text-decoration: none;
+  font-size: 48px;
+  display: inline;
+}
+
+input[type='submit']
+{
+  background-color: #fff;
+}
