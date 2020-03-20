@@ -1,48 +1,52 @@
 //window.addEventListener('resize', function(event){setup()});
-window.addEventListener("load", function() {setup()}, false);
+window.addEventListener("load", setup, {passive: false});
 
-var db, content;
+var db, main, scrollWrapper;
 
 // Custom Scrolling variables
-var prevY = 0;
+var previousY = 0;
 var ySpeed = 0;
-var scrolling = false;
+var momentumOn = false;
 
 function setup() {
   db = firebase.firestore();
-  content = document.getElementById("content");
+  main = document.getElementById("main");
+  scrollWrapper = document.getElementById('scroll-wrapper')
   getRouteData();
 
   // Create custom momentum scrolling
-  content.addEventListener('touchmove', function (event) {
-    if (scrolling)
-    {
-      scrolling = false;
-      prevY = 0;
-    }
-
-    if (prevY != 0) {
-      ySpeed = (prevY - event.touches[0].screenY);
-    }
-
-    prevY = event.touches[0].screenY;
-
-    content.scrollBy(0, ySpeed);
-
-    event.preventDefault();
-  }, {passive: false});
-
-  content.addEventListener('touchend', function (event) {
-    scrolling = true;
-    repeatScroll();
-  });
+  scrollWrapper.addEventListener('touchmove', onScroll, {passive: false});
+  scrollWrapper.addEventListener('touchend', onScrollEnd);
 }
 
-function repeatScroll()
+function onScroll(event) {
+  if (scrolling)
+  {
+    scrolling = false;
+    previousY = 0;
+  }
+
+  if (previousY != 0) {
+    ySpeed = (previousY - event.touches[0].screenY);
+  }
+
+  previousY = event.touches[0].screenY;
+
+  scrollWrapper.scrollBy(0, ySpeed);
+
+  event.preventDefault();
+}
+
+function onScrollEnd(event) {
+  scrolling = true;
+  looseMomentum();
+}
+
+function looseMomentum()
 {
   if (Math.abs(ySpeed) <= 0.5 || !scrolling)
   {
-    prevY = 0;
+    previousY = 0;
     ySpeed = 0;
     scrolling = false;
     return;
