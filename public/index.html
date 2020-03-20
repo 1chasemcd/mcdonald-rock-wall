@@ -4,74 +4,72 @@
     <meta charset="utf-8">
     <title>McDonald Rock Wall</title>
 
-    <link rel="stylesheet" href="main/styles.css">
+    <link rel="stylesheet" href="styles/master.css">
 
     <!-- For Webclip -->
-    <link rel="apple-touch-icon" href="main/icon.png"/>
+    <link rel="apple-touch-icon" href="images/icon.png"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   </head>
   <body>
     <!-- Menu Bar -->
-    <div class="top-nav">
-      <img src="main/mcd.png" height="90" class="mcd-img"></img>
+    <div id="top-navigation" class="top-navigation">
+      <img src="images/mcd.png" height="90" class="mcd-img"></img>
       <h1>Wall</h1>
-      <img src="main/plus.png" height="110" class="button-img home-page-element" onclick="openNew()"></img>
-      <img src="main/back.png" height="110" class="button-img new-page-element view-page-element" onclick="openIndex()"></img>
+      <img src="images/plus.png" height="110" class="button-img main-element" onclick="openNewPage()"></img>
+      <img src="images/back.png" height="110" class="button-img new-view-element" onclick="openMainPage()"></img>
     </div>
 
     <!-- Page Content -->
-    <div id='scroll-wrapper' class='scroll-wrapper'>
-      <div id='main' class='home-page-element'>
+    <div id="background" class="background"></div>
 
-      </div>
-      <div id='new-route' class='new-page-element'>
-        <canvas class="viewcanvas" id="viewcanvas"></canvas>
-        <div class="inroute" id="inroute">
-          <h5 id="warningLabel"></h5>
-          <form autocomplete="off" id="routeform" novalidate>
-            <input autocomplete="false" name="hidden" type="text" style="display:none;">
-            <br>
-            <br>
-            <input type="text" name="name" placeholder="Route Name" maxlength="25">
-            <br>
-            <br>
-            <input type="text" name="setter" placeholder="Setter" maxlength="25">
-            <br>
-            <br>
-            <input type="text" name="angle" placeholder="Angle" pattern="[0-9]*" inputmode="numeric" maxlength="2">
-            <br>
-            <br>
-            <input type="text" name="grade" placeholder="Grade" onfocus="focused = true;" onblur="focused = false;" pattern="[0-9]*" inputmode="numeric" maxlength="3">
-            <div class="unsentBox">
-              <input type="checkbox" name="unsent">
-              <h6>Check if Unsent</h6>
-            </div>
-            <br>
-            <br>
-            <input type="submit" name="submit">
-            <br>
-            <br>
-          </form>
-        </div>
-        <div class="bottom" id="bottom"></div>
-      </div>
-      <div id='view-route' class='view-page-element'>
-        <canvas class="viewcanvas" id="viewcanvas"></canvas>
-        <div class="inroute" id="inroute">
-        </div>
-        <div class="bottom" id="bottom"></div>
+    <div style="height: 140px; width: 100%;"></div>
+
+    <canvas class="view-canvas new-view-element" id="view-canvas"></canvas>
+
+    <div id='main' class='main-element'>
+
+    </div>
+
+    <div id='new-route' class='new-element'>
+      <div class="route-detail-container" id="route-detail-container">
+        <h5 id="warning-label"></h5>
+        <form autocomplete="off" id="route-form" novalidate>
+          <input autocomplete="false" name="hidden" type="text" style="display:none;">
+          <br>
+          <br>
+          <input type="text" name="name" placeholder="Route Name" maxlength="25">
+          <br>
+          <br>
+          <input type="text" name="setter" placeholder="Setter" maxlength="25">
+          <br>
+          <br>
+          <input type="text" name="angle" placeholder="Angle" pattern="[0-9]*" inputmode="numeric" maxlength="2">
+          <br>
+          <br>
+          <input type="text" name="grade" placeholder="Grade" onfocus="focused = true;" onblur="focused = false;" pattern="[0-9]*" inputmode="numeric" maxlength="3">
+          <br>
+          <br>
+          <input type="submit" name="submit">
+          <br>
+          <br>
+        </form>
       </div>
     </div>
 
+    <div id='view-route' class='view-element'>
+      <div class="inroute" id="inroute"></div>
+    </div>
+
     <!-- Hidden Image -->
-    <img src="main/wall.png" width="0" height="0" id="img">
+    <img src="images/wall.png" width="0" height="0" id="wall-img">
 
     <!-- Firebase scripts -->
     <script src="/__/firebase/6.3.4/firebase-app.js"></script>
     <script src="/__/firebase/6.3.4/firebase-firestore.js"></script>
     <script src="/__/firebase/init.js"></script>
 
-    <script src="scripts/index.js"></script>
+    <script src="scripts/wallclass.js"></script>
+    <script src="scripts/master.js"></script>
   </body>
 </html>
