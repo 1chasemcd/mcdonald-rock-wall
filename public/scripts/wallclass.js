@@ -75,6 +75,11 @@ class Wall {
     this.holds.push(hold);
   }
 
+  clear() {
+    this.holds = [];
+    this.draw();
+  }
+
   remove(x, y) {
     for (var i = 0; i < this.holds.length; i++) {
       if (this.holds[i].dist(x, y) <= this.radius) {

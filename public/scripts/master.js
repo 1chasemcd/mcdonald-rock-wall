@@ -1,6 +1,7 @@
 // Shared variables
 var db
-var background;
+var background1;
+var background2;
 var topNavigation;
 var canvas;
 var wallImg;
@@ -12,7 +13,7 @@ var main
 var mainElements;
 
 // New Route Page Variables
-var routeDetailContainer;
+var creationFormContainer;
 var form;
 var warningLabel;
 var focused = false;
@@ -20,7 +21,7 @@ var digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 var newElements;
 
 // View Route Page Variables
-var routeId;
+var routeDetailContainer
 var viewElements;
 
 // ---------------------------------------------------------------------------
@@ -29,8 +30,8 @@ var viewElements;
 
 function init() {
   // Locate shared elements
-  db = firebase.firestore();
-  background = document.getElementById("background");
+  background1 = document.getElementById("background1");
+  background2 = document.getElementById("background2");
   topNavigation = document.getElementById("top-navigation");
   canvas = document.getElementById("view-canvas");
   wallImg = document.getElementById("wall-img");
@@ -42,21 +43,26 @@ function init() {
   mainElements = document.getElementsByClassName('main-element');
 
   // Locate new route page elements
-  routeDetailContainer = document.getElementById("route-detail-container");
+  creationFormContainer = document.getElementById("creation-form-container");
   form = document.getElementById("route-form");
   warningLabel = document.getElementById("warning-label");
   newElements = document.getElementsByClassName('new-element');
 
   // Locate view route page newElements
+  routeDetailContainer = document.getElementById('route-detail-container');
   viewElements = document.getElementsByClassName('view-element');
+
+  initCanvas();
 
   // Make main page visible, hide others
   openMainPage();
 
+  // Get firebase firestore (After openMainPage because it is too slow)
+  db = firebase.firestore();
+
   // Initialize each page
   initMainPage();
   initNewPage();
-  initCanvas();
 }
 
 // ---------------------------------------------------------------------------
@@ -93,7 +99,8 @@ function openMainPage() {
     element.style.display = 'none';
   }
 
-  background.style.background = "#fff"
+  background1.style.background = "#fff"
+  background2.style.background = "#fff"
 }
 
 function addHtmlRoute(name, setter, angle, grade) {
@@ -120,7 +127,7 @@ function addHtmlRoute(name, setter, angle, grade) {
 
   main.insertBefore(div, main.childNodes[0]);
   div.classList.add("route");
-  div.setAttribute("onclick", "openViewPage('" + encodeURIComponent(name) + "')");
+  div.setAttribute("onclick", "openViewPage('" + name + "')");
 }
 
 // ---------------------------------------------------------------------------
@@ -154,7 +161,10 @@ function openNewPage() {
     element.style.display = 'block';
   }
 
-  background.style.background = "linear-gradient(#9bc995 50%, #5171a5 50%)"
+  wall.clear();
+  form.reset();
+  background1.style.background = "#9bc995";
+  background2.style.background = "#5171a5";
 }
 
 function initCanvas() {
@@ -251,9 +261,6 @@ function inputSafety() {
   }
 }
 
-
-
-
 // ---------------------------------------------------------------------------
 //Functions for view route page
 // ---------------------------------------------------------------------------
@@ -275,7 +282,9 @@ function openViewPage(routeId) {
     element.style.display = 'block';
   }
 
-  background.style.background = "linear-gradient(#9bc995 50%, #5171a5 50%)"
+  wall.clear();
+  background1.style.background = "#9bc995";
+  background2.style.background = "#5171a5";
   setupRoute(routeId);
   setupHolds(routeId);
 }
@@ -304,7 +313,7 @@ function setupRoute(routeId) {
 }
 
 function addHtmlInRoute(name, setter, angle, grade) {
-  inroute.innerHTML = "";
+  routeDetailContainer.innerHTML = "";
   var div = document.createElement("div");
   var nameHeading = document.createElement("h3");
   var setterHeading = document.createElement("h4");
@@ -321,10 +330,10 @@ function addHtmlInRoute(name, setter, angle, grade) {
   angleHeading.appendChild(angleText);
   gradeHeading.appendChild(gradeText);
 
-  inroute.appendChild(nameHeading);
-  inroute.appendChild(setterHeading);
-  inroute.appendChild(angleHeading);
-  inroute.appendChild(gradeHeading);
+  routeDetailContainer.appendChild(nameHeading);
+  routeDetailContainer.appendChild(setterHeading);
+  routeDetailContainer.appendChild(angleHeading);
+  routeDetailContainer.appendChild(gradeHeading);
 }
 
 // ---------------------------------------------------------------------------
