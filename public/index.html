@@ -7,62 +7,53 @@
     <link rel="stylesheet" href="styles/master.css">
 
     <!-- For Webclip -->
+    <meta name="apple-mobile-web-app-title" content="McD Wall">
     <link rel="apple-touch-icon" href="images/icon.png"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   </head>
   <body>
+    <!-- Green background for apple status bar -->
     <div class="status-bar-background"></div>
 
-    <!-- Menu Bar -->
-    <div id="top-navigation" class="top-navigation">
+    <!-- Navigation bar -->
+    <div class="top-navigation">
       <img src="images/mcd.png" height="90" class="mcd-img"></img>
       <h1>Wall</h1>
       <img src="images/plus.png" height="110" class="button-img main-element" onclick="openNewPage()"></img>
       <img src="images/back.png" height="110" class="button-img new-view-element" onclick="openMainPage()"></img>
     </div>
 
-    <!-- Page Content -->
-    <div id="background1" class="background1"></div>
-    <div id="background2" class="background2"></div>
+    <!-- Backgrounds to match color on overscroll -->
+    <div class="background1 new-view-element"></div>
+    <div class="background2 new-view-element"></div>
 
+    <!-- Div to fill space under fixed navigation bar. -->
     <div style="height: 140px; width: 100%;"></div>
 
-    <canvas class="view-canvas new-view-element" id="view-canvas"></canvas>
+    <!-- Canvas is shared by multiple pages, so it remains outised of page divs. -->
+    <canvas class="canvas new-view-element" id="canvas"></canvas>
 
-    <div id='main' class='main-element'>
+    <!-- Div to contain content of main page -->
+    <div id='main-page' class='main-element'></div>
 
+    <!-- Div to contain content of new route page -->
+    <div class='route-detail-container new-element'>
+      <h5 id="warning-label"></h5>
+
+      <!-- Form to get user input on route names -->
+      <form autocomplete="off" id="route-form" novalidate>
+        <input autocomplete="false" name="hidden" type="text" style="display:none;">
+        <input type="text" name="name" placeholder="Route Name" maxlength="25">
+        <input type="text" name="setter" placeholder="Setter" maxlength="25">
+        <input type="text" name="angle" placeholder="Angle" pattern="[0-9]*" inputmode="numeric" maxlength="2">
+        <input type="text" name="grade" placeholder="Grade" onfocus="focused = true;" onblur="focused = false;" pattern="[0-9]*" inputmode="numeric" maxlength="3">
+        <input type="submit" name="submit">
+      </form>
     </div>
 
-    <div id='new-route' class='new-element'>
-      <div class="route-detail-container" id="creation-form-container">
-        <h5 id="warning-label"></h5>
-        <form autocomplete="off" id="route-form" novalidate>
-          <input autocomplete="false" name="hidden" type="text" style="display:none;">
-          <br>
-          <br>
-          <input type="text" name="name" placeholder="Route Name" maxlength="25">
-          <br>
-          <br>
-          <input type="text" name="setter" placeholder="Setter" maxlength="25">
-          <br>
-          <br>
-          <input type="text" name="angle" placeholder="Angle" pattern="[0-9]*" inputmode="numeric" maxlength="2">
-          <br>
-          <br>
-          <input type="text" name="grade" placeholder="Grade" onfocus="focused = true;" onblur="focused = false;" pattern="[0-9]*" inputmode="numeric" maxlength="3">
-          <br>
-          <br>
-          <input type="submit" name="submit">
-          <br>
-          <br>
-        </form>
-      </div>
-    </div>
-
-    <div id='view-route' class='view-element'>
-      <div class="route-detail-container" id="route-detail-container"></div>
-    </div>
+    <!-- Div to contain content of view route page -->
+    <div id='view-route-page' class='route-detail-container view-element'></div>
 
     <!-- Hidden Image -->
     <img src="images/wall.png" width="0" height="0" id="wall-img">
@@ -72,6 +63,7 @@
     <script src="/__/firebase/6.3.4/firebase-firestore.js"></script>
     <script src="/__/firebase/init.js"></script>
 
+    <!-- Other scripts -->
     <script src="scripts/wallclass.js"></script>
     <script src="scripts/master.js"></script>
   </body>

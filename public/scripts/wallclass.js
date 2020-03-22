@@ -1,4 +1,3 @@
-// TODO: Fix random hold movement/type change after screen rotation
 
 // Hold class and methods
 class Hold {
@@ -8,6 +7,7 @@ class Hold {
     this.type = type;
   }
 
+  // Method to find distance from hold to a point
   dist(x, y) {
     return Math.sqrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2));
   }
@@ -29,12 +29,7 @@ class Wall {
     this.ctx = this.canvas.getContext("2d");
   }
 
-  changeCanvas(canvas) {
-    this.canvas = canvas;
-    this.ctx = this.canvas.getContext("2d");
-    this.draw();
-  }
-
+  // Method to get user click and add/remove hold.
   update(x, y) {
     x = (x - this.canvas.offsetLeft) / this.canvas.width;
     y = (y - this.canvas.offsetTop) / this.canvas.height;
@@ -50,6 +45,7 @@ class Wall {
     }
   }
 
+  // Method to draw all holds on a canvas
   draw() {
     this.ctx.drawImage(this.bgImg, 0, 0, this.canvas.width, this.canvas.height);
     this.ctx.lineWidth = 0.01 * this.canvas.width;
@@ -71,15 +67,18 @@ class Wall {
     }
   }
 
+  // Method to add a hold
   add(hold) {
     this.holds.push(hold);
   }
 
+  // Method to remove all holds from the wall and draw the empty canvas
   clear() {
     this.holds = [];
     this.draw();
   }
 
+  // Method to remove hold at coordinate
   remove(x, y) {
     for (var i = 0; i < this.holds.length; i++) {
       if (this.holds[i].dist(x, y) <= this.radius) {
@@ -88,6 +87,8 @@ class Wall {
     }
   }
 
+
+  // Method to check if there is a hold at a certain position
   holdAt(x, y) {
     for (var i = 0; i < this.holds.length; i++) {
       if (this.holds[i].dist(x, y) <= this.radius) {
@@ -98,6 +99,7 @@ class Wall {
     return false;
   }
 
+  // Method to return a formatted list of all holds for submission to database
   getHolds() {
     var holdArray = []
     for (var i = 0; i < this.holds.length; i++) {
@@ -108,6 +110,7 @@ class Wall {
     return holdArray;
   }
 
+  // Method to populate the hold list based on a string of holds from the database
   setHolds(stringArray) {
     for (var i = 0; i < stringArray.length; i++) {
       var hold = stringArray[i].split(",");

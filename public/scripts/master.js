@@ -1,28 +1,24 @@
 // Shared variables
 var db
-var background1;
-var background2;
-var topNavigation;
-var canvas;
 var wallImg;
 var wall;
+var canvas;
+var canvasIsClickable = false;
 var newViewElements;
 
 // Main Page Variables
-var main
+var mainPage
 var mainElements;
 
 // New Route Page Variables
-var creationFormContainer;
 var form;
 var warningLabel;
+var newElements;
 var focused = false;
 var digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-var newElements;
-var canvasIsClickable = false;
 
 // View Route Page Variables
-var routeDetailContainer
+var viewRoutePage;
 var viewElements;
 
 // ---------------------------------------------------------------------------
@@ -31,26 +27,21 @@ var viewElements;
 
 function init() {
   // Locate shared elements
-  background1 = document.getElementById("background1");
-  background2 = document.getElementById("background2");
-  topNavigation = document.getElementById("top-navigation");
-  canvas = document.getElementById("view-canvas");
+  canvas = document.getElementById("canvas");
   wallImg = document.getElementById("wall-img");
   newViewElements = document.getElementsByClassName('new-view-element');
 
-
   // Locate main page elements
-  main = document.getElementById("main");
+  mainPage = document.getElementById("main-page");
   mainElements = document.getElementsByClassName('main-element');
 
   // Locate new route page elements
-  creationFormContainer = document.getElementById("creation-form-container");
   form = document.getElementById("route-form");
   warningLabel = document.getElementById("warning-label");
   newElements = document.getElementsByClassName('new-element');
 
   // Locate view route page newElements
-  routeDetailContainer = document.getElementById('route-detail-container');
+  viewRoutePage = document.getElementById('view-route-page');
   viewElements = document.getElementsByClassName('view-element');
 
   initCanvas();
@@ -67,14 +58,33 @@ function init() {
 }
 
 // ---------------------------------------------------------------------------
+// Function for Canvas
+// ---------------------------------------------------------------------------
+
+// Set canvas size and create instance of Wall
+function initCanvas() {
+  canvas.width = document.documentElement.clientWidth;
+  canvas.height = document.documentElement.clientWidth * (1280/960);
+  wall = new Wall(canvas, wallImg);
+  wall.draw();
+
+  canvas.addEventListener('click', function(event) {
+    if (canvasIsClickable) {
+      wall.update(event.pageX, event.pageY);
+      wall.draw();
+    }
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Functions for Main page
 // ---------------------------------------------------------------------------
 
+// Gather routes from database for main page
 function initMainPage() {
   db.collection("routes").orderBy("time").onSnapshot(function(snapshot) {
-    main.innerHTML = '<div class="bottom-space"></div>';
     snapshot.forEach( function(doc) {
-      addHtmlRoute(
+      addMainPageHtmlRoute(
         doc.data().name,
         doc.data().setter,
         doc.data().angle,
@@ -83,6 +93,7 @@ function initMainPage() {
   });
 }
 
+// Hide elements not on main page
 function openMainPage() {
   for (element of mainElements) {
     element.style.display = 'block';
@@ -100,12 +111,11 @@ function openMainPage() {
     element.style.display = 'none';
   }
 
-  background1.style.background = "#fff"
-  background2.style.background = "#fff"
   canvasIsClickable = false;
 }
 
-function addHtmlRoute(name, setter, angle, grade) {
+// Add single route and description to list on main page
+function addMainPageHtmlRoute(name, setter, angle, grade) {
   var div = document.createElement("div");
   var nameHeading = document.createElement("h3");
   var setterHeading = document.createElement("h4");
@@ -127,8 +137,10 @@ function addHtmlRoute(name, setter, angle, grade) {
   div.appendChild(angleHeading);
   div.appendChild(gradeHeading);
 
-  main.insertBefore(div, main.childNodes[0]);
+  mainPage.insertBefore(div, mainPage.childNodes[0]);
   div.classList.add("route");
+
+  // Setup click behavior to open view page
   div.setAttribute("onclick", "openViewPage('" + name + "')");
 }
 
@@ -136,6 +148,7 @@ function addHtmlRoute(name, setter, angle, grade) {
 // Functions for New Route Page
 // ---------------------------------------------------------------------------
 
+// Setup interval safety and form submit
 function initNewPage() {
   // Code for form submit
   form.onsubmit = function(e) {
@@ -143,9 +156,10 @@ function initNewPage() {
     formSubmit();
   };
 
-  setInterval(inputSafety, 100);
+  setInterval(checkInputContinuous, 100);
 }
 
+// Hide elements not on new page
 function openNewPage() {
   for (element of mainElements) {
     element.style.display = 'none';
@@ -164,26 +178,13 @@ function openNewPage() {
   }
 
   canvasIsClickable = true;
+
+  // Clear previous holds off of canvas
   wall.clear();
   form.reset();
-  background1.style.background = "#9bc995";
-  background2.style.background = "#5171a5";
 }
 
-function initCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerWidth * (1280/960);
-  wall = new Wall(canvas, wallImg);
-  wall.draw();
-
-  canvas.addEventListener('click', function(event) {
-    if (canvasIsClickable) {
-      wall.update(event.pageX, event.pageY);
-      wall.draw();
-    }
-  });
-}
-
+// gather safe user input to send to database
 function formSubmit(e) {
   var name = form.elements["name"].value;
   var setter = form.elements["setter"].value;
@@ -201,6 +202,25 @@ function formSubmit(e) {
   return false;
 }
 
+// Function to send user input to database
+function writeRouteData(name, setter, angle, grade) {
+  db.collection("routes").add({
+    name: name,
+    setter: setter,
+    angle: angle,
+    grade: grade,
+    time: firebase.firestore.Timestamp.now(),
+    holds: wall.getHolds()
+  })
+  .then(function(docRef) {
+      openMainPage();
+  })
+  .catch(function(error) {
+      document.write("Error submitting route: ", error);
+  });
+}
+
+// Function to ensure all form elements are filled out
 function checkInput(name, setter, angle, grade) {
   if (name == "") {
     return "<br>⚠️ Enter Route Name ⚠️";
@@ -232,24 +252,8 @@ function checkInput(name, setter, angle, grade) {
   return true;
 }
 
-function writeRouteData(name, setter, angle, grade) {
-  db.collection("routes").add({
-    name: name,
-    setter: setter,
-    angle: angle,
-    grade: grade,
-    time: firebase.firestore.Timestamp.now(),
-    holds: wall.getHolds()
-  })
-  .then(function(docRef) {
-      openMainPage();
-  })
-  .catch(function(error) {
-      document.write("Error submitting route: ", error);
-  });
-}
-
-function inputSafety() {
+// Function to run multiple times per second to continuously format user input.
+function checkInputContinuous() {
   if (focused && form.elements["grade"].value.length == 0) {
     form.elements["grade"].value = "v";
   } else if (focused == false && form.elements["grade"].value == "v") {
@@ -270,6 +274,7 @@ function inputSafety() {
 //Functions for view route page
 // ---------------------------------------------------------------------------
 
+// Function to hide elements not on view page
 function openViewPage(routeId) {
   for (element of mainElements) {
     element.style.display = 'none';
@@ -288,13 +293,15 @@ function openViewPage(routeId) {
   }
 
   canvasIsClickable = false;
+  // Clear holds from wall
   wall.clear();
-  background1.style.background = "#9bc995";
-  background2.style.background = "#5171a5";
+
+  // Add new holds to wall and get route info from database
   setupRoute(routeId);
   setupHolds(routeId);
 }
 
+// Function to get holds from database and draw them on the wall
 function setupHolds(routeId) {
   db.collection("routes").where('name', '==', routeId)
   .get().then(function(snapshot) {
@@ -305,11 +312,12 @@ function setupHolds(routeId) {
   });
 }
 
+// Function to get route info from the database and place it on the page
 function setupRoute(routeId) {
   db.collection("routes").where('name', '==', routeId)
   .get().then(function(snapshot) {
     snapshot.forEach(function(doc) {
-      addHtmlInRoute(
+      addViewPageHtmlRoute(
       doc.data().name,
       doc.data().setter,
       doc.data().angle,
@@ -318,8 +326,9 @@ function setupRoute(routeId) {
   });
 }
 
-function addHtmlInRoute(name, setter, angle, grade) {
-  routeDetailContainer.innerHTML = "";
+// Function to place route info in divs and organize it on the page.
+function addViewPageHtmlRoute(name, setter, angle, grade) {
+  viewRoutePage.innerHTML = "";
   var div = document.createElement("div");
   var nameHeading = document.createElement("h3");
   var setterHeading = document.createElement("h4");
@@ -336,10 +345,10 @@ function addHtmlInRoute(name, setter, angle, grade) {
   angleHeading.appendChild(angleText);
   gradeHeading.appendChild(gradeText);
 
-  routeDetailContainer.appendChild(nameHeading);
-  routeDetailContainer.appendChild(setterHeading);
-  routeDetailContainer.appendChild(angleHeading);
-  routeDetailContainer.appendChild(gradeHeading);
+  viewRoutePage.appendChild(nameHeading);
+  viewRoutePage.appendChild(setterHeading);
+  viewRoutePage.appendChild(angleHeading);
+  viewRoutePage.appendChild(gradeHeading);
 }
 
 // ---------------------------------------------------------------------------
