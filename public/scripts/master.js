@@ -19,6 +19,7 @@ var warningLabel;
 var focused = false;
 var digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 var newElements;
+var canvasIsClickable = false;
 
 // View Route Page Variables
 var routeDetailContainer
@@ -101,6 +102,7 @@ function openMainPage() {
 
   background1.style.background = "#fff"
   background2.style.background = "#fff"
+  canvasIsClickable = false;
 }
 
 function addHtmlRoute(name, setter, angle, grade) {
@@ -161,6 +163,7 @@ function openNewPage() {
     element.style.display = 'block';
   }
 
+  canvasIsClickable = true;
   wall.clear();
   form.reset();
   background1.style.background = "#9bc995";
@@ -174,8 +177,10 @@ function initCanvas() {
   wall.draw();
 
   canvas.addEventListener('click', function(event) {
-    wall.update(event.pageX, event.pageY);
-    wall.draw();
+    if (canvasIsClickable) {
+      wall.update(event.pageX, event.pageY);
+      wall.draw();
+    }
   });
 }
 
@@ -237,7 +242,7 @@ function writeRouteData(name, setter, angle, grade) {
     holds: wall.getHolds()
   })
   .then(function(docRef) {
-      openIndex();
+      openMainPage();
   })
   .catch(function(error) {
       document.write("Error submitting route: ", error);
@@ -282,6 +287,7 @@ function openViewPage(routeId) {
     element.style.display = 'block';
   }
 
+  canvasIsClickable = false;
   wall.clear();
   background1.style.background = "#9bc995";
   background2.style.background = "#5171a5";
