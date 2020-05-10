@@ -111,6 +111,7 @@ function openMainPage() {
     element.style.display = 'none';
   }
 
+  window.scrollTo(0, 0);
   canvasIsClickable = false;
 }
 
@@ -177,6 +178,8 @@ function openNewPage() {
     element.style.display = 'block';
   }
 
+  window.scrollTo(0, 0);
+  warningLabel.innerHTML = "";
   canvasIsClickable = true;
 
   // Clear previous holds off of canvas
@@ -292,6 +295,7 @@ function openViewPage(routeId) {
     element.style.display = 'block';
   }
 
+  window.scrollTo(0, 0);
   canvasIsClickable = false;
   // Clear holds from wall
   wall.clear();
