@@ -1,3 +1,6 @@
+// Constant to define which db collection to pull route data from
+const routesCollectionId = 'routes-2'
+
 // Shared variables
 var db
 var wallImg;
@@ -82,7 +85,7 @@ function initCanvas() {
 
 // Gather routes from database for main page
 function initMainPage() {
-  db.collection("routes").orderBy("time").onSnapshot(function(snapshot) {
+  db.collection(routesCollectionId).orderBy("time").onSnapshot(function(snapshot) {
     snapshot.forEach( function(doc) {
       addMainPageHtmlRoute(
         doc.data().name,
@@ -207,7 +210,7 @@ function formSubmit(e) {
 
 // Function to send user input to database
 function writeRouteData(name, setter, angle, grade) {
-  db.collection("routes").add({
+  db.collection(routesCollectionId).add({
     name: name,
     setter: setter,
     angle: angle,
@@ -245,7 +248,7 @@ function checkInput(name, setter, angle, grade) {
     return "<br>⚠️ Select at Least 2 Holds ⚠️";
   }
 
-  db.collection("routes").where('name', '==', name)
+  db.collection(routesCollectionId).where('name', '==', name)
   .get().then(function(snapshot) {
     if (!snapshot.empty) {
       return "<br>⚠️ Name already used ⚠️"
@@ -307,7 +310,7 @@ function openViewPage(routeId) {
 
 // Function to get holds from database and draw them on the wall
 function setupHolds(routeId) {
-  db.collection("routes").where('name', '==', routeId)
+  db.collection(routesCollectionId).where('name', '==', routeId)
   .get().then(function(snapshot) {
     snapshot.forEach(function(doc) {
       wall.setHolds(doc.data().holds)
@@ -318,7 +321,7 @@ function setupHolds(routeId) {
 
 // Function to get route info from the database and place it on the page
 function setupRoute(routeId) {
-  db.collection("routes").where('name', '==', routeId)
+  db.collection(routesCollectionId).where('name', '==', routeId)
   .get().then(function(snapshot) {
     snapshot.forEach(function(doc) {
       addViewPageHtmlRoute(
